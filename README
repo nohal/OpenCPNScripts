@@ -1,0 +1,11 @@
+Various scripts complementing OpenCPN
+
+21ows-kap
+Shell script converting weather charts from http://ows.public.sembach.af.mil/ to BSB charts.
+
+hr-kap
+Shell script converting weather charts from http://prognoza.hr/nauticari.php?id=nauticari to BSB charts.
+
+opc-kap
+Shell script converting weather charts from http://www.opc.ncep.noaa.gov/ to BSB charts.
+
