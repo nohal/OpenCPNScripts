@@ -14,7 +14,7 @@
 
 SYMBOL='bouy1'            #Symbol to be used for the WPT
 NAME_VISIBLE=1            #Should the name be visible on the chart?
-GENERATE_DESCRIPTION=1    #Should the description containing all the data be generated?
+GENERATE_DESCRIPTION=0    #Should the description containing all the data be generated?
 
 # --- End of config, you should not need to modify anything belllow this line ---
 
