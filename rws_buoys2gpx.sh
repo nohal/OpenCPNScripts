@@ -5,6 +5,9 @@
 # Version 1.0 - 2013-05-31
 # Licensed: GPLv2 or, at your will, later
 
+#The original CSV data can be obtained from http://www.vaarweginformatie.nl/fdd/main/infra/downloads
+#At the time of creation of this script, the up-to-date file 130524_DNZ_002a_markeringen_drijvend was at http://www.vaarweginformatie.nl/fdd/main/download?fileId=25053804
+
 #The input file is expected in the following format:
 #VAARWATER;BENAM_COD;BENAMING;INBEDRIJF;X_RD;Y_RD;OBJ_SOORT;IALA_CAT;N_WGS_gms;E_WGS_gms;N_WGS_gm;E_WGS_gm;Obj_vorm_c;OBJ_VORM;Obj_kleur_c;OBJ_KLEUR;Kleurpatr_c;KLEURPATR;V_TT_c;TT_TOPTEK;TT_kleur_c;TT_KLEUR;TT_pat_c;TT_KLR_PAT;Sign_kar_c;SIGN_KAR;Sign_gr_c;SIGN_GROEP;SIGN_PERIO;RACON_CODE;Licht_kl_c;LICHT_KLR;OPGEHEVEN;X_WGS84;Y_WGS84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #[KOPBAKENS]LAUWERSMEER;VW-KLM  -0125;KLM 2;01.01.2005; 598881,7548; 209807,7054;KB2;4;53.22.24.52;006.12.38.45;53.22.4087;006.12.6409;2;stomp;6;Geel;#;Niet toegewezen;5;Cilinder;3,1,3;Rood/wit/rood;1;Horizontaal;#;Niet toegewezen;#;Niet toegewezen;#;#;#;Niet toegewezen;#;6,210681;53,373478;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
