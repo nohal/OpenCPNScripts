@@ -1,0 +1,34 @@
+Nimitz,HAWAII,CVN-68,CVN-68,303981000,0,35,200,100,48,12,12,Nimitz_demo
+Eisenhower,GIBRALTAR,CVN-69,CVN-69,303981001,0,35,200,100,48,12,12,Eisenhower_demo
+Vinson,,CVN-70,CVN-70,303981070,0,35,200,100,48,12,12,Vinson_demo
+Yorktown,,CG-48,CG-48,303981048,0,35,60,100,15,15,10,Vinson_parade
+Lake Champlain,,CG-57,CG-57,303981057,0,35,60,100,15,15,10,Vinson_parade
+Normandy,,CG-60,CG-60,303981060,0,35,60,100,15,15,10,Vinson_parade
+Monterey,,CG-61,CG-61,303981061,0,35,60,100,15,15,10,Vinson_parade
+FFG 7,,FFG-7,FFG-7,303981007,0,35,45,50,10,10,6,Vinson_parade
+FFG 36,,FFG-36,FFG-36,303981036,0,35,45,50,10,10,6,Vinson_parade
+Escort-2,,FFG-36,FFG-36,303981036,0,35,45,50,10,10,6,Vinson_parade
+FFG 11,,FFG-11,FFG-11,303981011,0,35,45,50,10,10,6,Vinson_parade
+Escort-3,,FFG-11,FFG-11,303981011,0,35,45,50,10,10,6,Vinson_parade
+FFG 12,,FFG-12,FFG-12,303981012,0,35,45,50,10,10,6,Vinson_parade
+Cruise-1,HAWAII,,,303981991,123456,60,75,150,20,20,10,Vinson_demo
+escort,,CG-57,CG-57,303981157,0,35,60,100,15,15,10,Vinson_demo
+,,Escort-4,,303981158,0,35,60,100,15,15,10,Vinson_demo
+,,Escort-1,,303981159,0,35,60,100,15,15,10,Vinson_demo
+San Antonio,,LPD-17,LPD-17,303981017,0,35,60,80,12,12,8,Vinson_demo
+Titanic,,,,303981992,0,36,10,2,3,3,3,Ship_demo
+Pedro-1,,Pedro,,111303501,0,99,4,6,4,4,0,Vinson_demo
+DELL,DELL,DELL,DELL,111303122,0,99,4,4,4,4,0,Dell
+TOSHIBA,TOSHIBA,TOSHIBA,TOSHIBA,111303123,0,99,4,4,4,4,0,Toshiba
+Clemenceau,AJACCIO,,,226123001,0,35,150,120,40,10,10,Clemenceau_demo
+Foch,,,,226123002,0,35,150,120,40,10,10,Foch_demo
+USS_California,,,,303982001,0,99,0,0,0,0,0,Battleship_Row
+USS_Maryland,,,,303982002,0,99,0,0,0,0,0,Battleship_Row
+USS_Oklahoma,,,,303982003,0,99,0,0,0,0,0,Battleship_Row
+USS_Tennessee,,,,303982004,0,99,0,0,0,0,0,Battleship_Row
+USS_West_Virginia,,,,303982005,0,99,0,0,0,0,0,Battleship_Row
+USS_Arizona,,,,303982006,0,99,0,0,0,0,0,Battleship_Row
+USS_Nevada,,,,303982007,0,99,0,0,0,0,0,Battleship_Row
+USS_Pennsylvania,,,,303982008,0,99,0,0,0,0,0,Battleship_Row
+Akagi,,,,431000001,0,35,130,130,8,22,8,Akagi_demo
+

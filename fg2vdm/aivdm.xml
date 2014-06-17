@@ -1,0 +1,1769 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+ <comment>
+  <![CDATA[
+    This is the protocol definition for aivdm - meant to be further converted to AIS !AIVDM format by fg2vdm.py
+
+    It can be used with any scenario, but is limited to 3 carriers, 9 escorts, 9 ships and 9 AI aircraft
+
+    Usage:
+    # fgfs --generic=socket,out,1,<host>,5501,udp,aivdm
+
+    Check data with:
+    #  netcat -u -l -p 5501
+  ]]>
+ </comment>
+
+ <generic>
+
+  <output>
+   <line_separator>newline</line_separator>
+   <var_separator>,</var_separator>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/carrier/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/carrier/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/carrier/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/carrier/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/carrier/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/carrier/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/carrier/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,CARRIER\n</format>
+    <node>/ai/models/carrier/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/carrier[1]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/carrier[1]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/carrier[1]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/carrier[1]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/carrier[1]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/carrier[1]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/carrier[1]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,CARRIER\n</format>
+    <node>/ai/models/carrier[1]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/carrier[2]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/carrier[2]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/carrier[2]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/carrier[2]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/carrier[2]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/carrier[2]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/carrier[2]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,CARRIER\n</format>
+    <node>/ai/models/carrier[2]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[1]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[1]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[1]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[1]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[1]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[1]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[1]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[1]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[2]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[2]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[2]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[2]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[2]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[2]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[2]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[2]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[3]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[3]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[3]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[3]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[3]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[3]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[3]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[3]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[4]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[4]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[4]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[4]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[4]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[4]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[4]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[4]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[5]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[5]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[5]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[5]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[5]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[5]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[5]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[5]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[6]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[6]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[6]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[6]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[6]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[6]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[6]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[6]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[7]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[7]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[7]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[7]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[7]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[7]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[7]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[7]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/escort[8]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/escort[8]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/escort[8]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/escort[8]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/escort[8]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/escort[8]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/escort[8]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,ESCORT\n</format>
+    <node>/ai/models/escort[8]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[1]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[1]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[1]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[1]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[1]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[1]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[1]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[1]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[2]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[2]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[2]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[2]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[2]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[2]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[2]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[2]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[3]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[3]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[3]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[3]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[3]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[3]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[3]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[3]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[4]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[4]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[4]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[4]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[4]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[4]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[4]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[4]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[5]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[5]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[5]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[5]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[5]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[5]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[5]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[5]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[6]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[6]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[6]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[6]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[6]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[6]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[6]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[6]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[7]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[7]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[7]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[7]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[7]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[7]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[7]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[7]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/ship[8]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/ship[8]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/ship[8]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/ship[8]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/ship[8]/velocities/speed-kts</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/ship[8]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/ship[8]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,SHIP\n</format>
+    <node>/ai/models/ship[8]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[1]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[1]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[1]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[1]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[1]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[1]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[1]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[1]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[2]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[2]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[2]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[2]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[2]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[2]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[2]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[2]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[3]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[3]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[3]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[3]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[3]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[3]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[3]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[3]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[4]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[4]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[4]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[4]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[4]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[4]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[4]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[4]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[5]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[5]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[5]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[5]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[5]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[5]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[5]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[5]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[6]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[6]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[6]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[6]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[6]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[6]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[6]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[6]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[7]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[7]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[7]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[7]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[7]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[7]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[7]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[7]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>LAT=%03.5f</format>
+    <node>/ai/models/aircraft[8]/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>LON=%03.5f</format>
+    <node>/ai/models/aircraft[8]/position/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>altitude</name>
+    <type>float</type>
+    <format>ALT=%03.5f</format>
+    <node>/ai/models/aircraft[8]/position/altitude-ft</node>
+   </chunk>
+
+   <chunk>
+    <name>orientation</name>
+    <type>float</type>
+    <format>HDG=%03.5f</format>
+    <node>/ai/models/aircraft[8]/orientation/true-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>speed</name>
+    <type>float</type>
+    <format>SOG=%03.5f</format>
+    <node>/ai/models/aircraft[8]/velocities/true-airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>sign</name>
+    <type>string</type>
+    <format>SIGN=%s</format>
+    <node>/ai/models/aircraft[8]/sign</node>
+   </chunk>
+
+   <chunk>
+    <name>callsign</name>
+    <type>string</type>
+    <format>CALLSIGN=%s</format>
+    <node>/ai/models/aircraft[8]/callsign</node>
+   </chunk>
+
+   <chunk>
+    <name>name</name>
+    <type>string</type>
+    <format>NAME=%s,AIRCRAFT\n</format>
+    <node>/ai/models/aircraft[8]/name</node>
+   </chunk>
+
+ <comment> ------------------------------------</comment>
+
+  </output>
+
+ </generic>
+
+</PropertyList>
