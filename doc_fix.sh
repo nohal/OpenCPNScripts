@@ -12,3 +12,11 @@ mv OpenCPN\ User\ Manual_files images
 grep -o "id=\"[a-zA-Z ]*\"" help_en_US.html | grep " " | awk '{ replacement=$0; gsub(" ", "", replacement);  system("sed -ibak -e \047s/"$0"/"replacement"/g\047 help_en_US.html");  }'
 
 rm help_en_US.htmlbak
+
+#Remove CSS classes
+sed -i -e 's/ class="[a-z1-9\-\ ]*"//g' help_en_US.html
+#Normalize the tables
+sed -i -e 's/<table.*>/<table border="1" cellpadding="1" cellspacing="1">/g' help_en_US.html
+#Optimize the JPG images
+find images -name "*.jp*" -exec sh -c "/opt/mozjpeg/bin/cjpeg -outfile {}.new {}; mv {}.new {}" \;
+
