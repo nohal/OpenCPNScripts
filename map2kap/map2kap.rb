@@ -25,12 +25,29 @@
 #2011-08-28, Ver 0.2.21 - Some dependency checking, improved Linux compatibility
 #2011-10-16, Ver 0.2.22 Using scale in the range [500..10000000] from end of file
 #                       name, if present
+#2012-01-19, Ver 0.2.23 Fixed some bugs:
+#                       - Handling purely numeric file names correctly
+#                       - Handling file names omitting extension correctly again
+#2012-01-19, Ver 0.3.00 Updated quick reference that is printed when no args are
+#                       given
+#2014-08-09, Ver 0.3.10 - Streamlined path handling in GetFileInfo; now also
+#                         working correctly on Linux
+#                       - Tested with Linux and Ruby 2.0.0, updated preferred Ruby
+#                         version accordingly
+#2015-11-29, Ver 0.4.00 - Better guessing of chart scale
+#                         -- now also looks at chart title given in .map file
+#                         -- zoom levels in file names now must be preceded by "-"
+#                            as to not confuse them with simple file numbers
+#                       - Now also accepting .map files wit Mac-style line endings
+#                       - Better error checking on .map files (missing entries no
+#                         longer lead to unspecific hang/crash)
+#                       - Tested and preferred Ruby version is now 2.1.x with x >=5
 
-version = '0.2.22'
+version = '0.4.00'
 
 include Math
 
-######################### Cusomizable variables ##########################
+######################### Customizable variables #########################
 
 imgkap = ENV['MAP2KAP_IMGKAP']
 unless imgkap   # environment variable not set
@@ -43,10 +60,10 @@ end
 
 ######################## Check runtime environment #######################
 
-a = RUBY_VERSION.split('.') # Result: ["1", "8", "5"]
-if a[0].to_i != 1 || a[1].to_i != 9 || a[2].to_i < 2
+a = RUBY_VERSION.split('.') # Result: ["2", "1", "5"]
+if ( a[0].to_i != 2 || a[1].to_i != 1 || a[2].to_i < 5 )
     STDERR.print "WARNING - Unsupported version #{RUBY_VERSION} of ruby interpreter installed.\n"
-    STDERR.print "          (This script prefers ruby 1.9.2 and imgkap 1.11)\n"
+    STDERR.print "          (This script prefers ruby 2.1.x (with x>=5) and imgkap 1.11)\n"
 end
 
 ######################### Function definitions ###########################
@@ -57,19 +74,19 @@ end
 ##########################################################################
 
 def Usage
-    puts "Usage: map2kap pic-or-map-file ... [scale [sounding-units [sounding-datum
+    puts "\nUsage: map2kap pic-or-map-file ... [scale [sounding-units [sounding-datum
                [lat-adj-to-wgs84-in-seconds long-adj-to-wgs84-in-seconds] ] ] ]\n
-       For any picture file given, a valid Ozi V2 .map file must exist with
+     - For any picture file given, a valid Ozi V2 .map file must exist with
        the same base name as the picture file. For any map file name given,
        the picture file name is taken from its contents.
-       Chart scale, if given on the command line, is used for all given files.
+     - Chart scale, if given on the command line, is used for all given files.
        If no scale is given on the command line, it is derived from a trailing
-       numeric zoom level [6..20] of any given file name. If it cannot be de-
-       termined that way for a given file, the user is prompted to input a
-       scale for that file. (Note that the scale affects how charts are
-       quilted in most navigation software.)
-       Sounding-units, if not given, defaults to 'Meters'. If any parameter is
-       left out, but others follow, put '0' (for scale) or 'unknown' (for
+       numeric zoom level [6..20] or scale [500..10000000] of any given file
+       name. If it cannot be determined that way for any given file, the user
+       is prompted to input a scale for that file. (Note that the scale affects
+       how charts are quilted in most navigation software.)
+     - Sounding-units, if not given, defaults to 'Meters'. If any parameter is
+       left out, but others follow, put '0' (for scale) or 'unknown' (for other
        sounding parameters) as a place holder.\n\n"
     puts "Dependencies: ruby and imgkap must be installed.\n"
 	puts "              (Tested with ruby 1.9.2 and imgkap 1.11)\n"
@@ -77,7 +94,7 @@ end
 
 
 ##########################################################################
-# declare class for file information
+# declare struct for file information
 ##########################################################################
 
 FileInfo = Struct.new(:pathName, :baseName, :basePath, :extension, :scale)
@@ -87,7 +104,6 @@ FileInfo = Struct.new(:pathName, :baseName, :basePath, :extension, :scale)
 # Extract all relevant information from the given file/path name into
 # a FileInfo struct
 # - pathName:  the path portion, including a trailing path separator.
-#              ("./" is simplified to "".)
 # - baseName:  the base name (with leading path and trailing extension
 #              chopped off)
 # - basePath:  the path including the base name (but without extension)
@@ -103,47 +119,81 @@ FileInfo = Struct.new(:pathName, :baseName, :basePath, :extension, :scale)
 # Obviously, the basePath member is redundant; it exists only for
 # convenience.
 # Example: Given "C:\Images\Map-Google-15.jpg", the function will return
-#          { pathName  = "C:\Images\";
+#          { pathName  = "C:/Images/";
 #            baseName  = "Map-Google-15";
-#            basePath  = "C:\Images\Map-Google-15";
-#            extension = "JPG";
+#            basePath  = "C:/Images/Map-Google-15";
+#            extension = ".JPG";
 #            scale     = 16000 } 
 ##########################################################################
 
-def GetFileInfo(filePath)
+def GetFileInfo(filePath, getScale)
+	# if an alternate file path separator is defined,
+	# replace any use of it by the standard separator
+	if File::ALT_SEPARATOR != nil
+	  localFilePath = filePath.tr(File::ALT_SEPARATOR, File::SEPARATOR)
+	else
+	  localFilePath = filePath
+	end
+
     # start off with an empty FileInfo (all members nil)
     fileInfo = FileInfo.new
 
-    # separate extension from the rest
-    a = filePath.rpartition(".")
-    if a[1] == ""                     # no "." found, i. e. no extension
-        fileInfo.basePath = filePath  # everything is path and base name
-        fileInfo.extension = ""       # empty extension
+	# fill with path split into components
+	fileInfo.extension = File.extname(localFilePath)
+    fileInfo.baseName  = File.basename(localFilePath, fileInfo.extension)
+	fileInfo.pathName  = File.dirname(localFilePath) + File::SEPARATOR
+	fileInfo.basePath  = fileInfo.pathName + fileInfo.baseName
+	
+	# normalize extension
+    if fileInfo.extension == ""
+        fileInfo.extension = ".MAP"    # assume .map extension
     else
-        fileInfo.basePath = a[0]
-        fileInfo.extension = a[2].upcase
+        fileInfo.extension.upcase!
     end
+	
+	# get scale only if explicitly requested
+	if getScale
+		# try to determine scale from chart title in .map file
+		mapFileName = ValidateMapFileName(localFilePath)
+		mapFileLines = ReadFileLines(mapFileName, fileInfo.baseName)
+		if mapFileLines != nil
+			chartTitle = mapFileLines[1].chomp.strip
+			match = chartTitle.rindex(/[^0-9]/)
+			if match and (chartTitle[match] == ":")
+				a = match + 1
+				l = chartTitle.length-1
+				number = chartTitle[a..l].to_i
+				if number >= 500 and number <= 10000000
+					fileInfo.scale = number
+				end
+			end
+		end
 
-    # separate basename and path
-    pathSepPat = Regexp.new("[\\" + File::SEPARATOR + "\\" + File::ALT_SEPARATOR + "]")
-    a = fileInfo.basePath.rpartition(pathSepPat)
-    if a[1] == ""                     # no path separator found, i. e. no path
-        fileInfo.pathName = ""        # empty path
-        fileInfo.baseName = fileInfo.basePath
-    else
-        fileInfo.pathName = a[0] + a[1]
-        fileInfo.baseName = a[2]
-    end
-
-    # determine default scale
-    a = fileInfo.baseName.rindex(/[^0-9]/)+1
-    l = fileInfo.baseName.length-1
-    number = fileInfo.baseName[a..l].to_i
-    if number >= 500 and number <= 10000000
-        fileInfo.scale = number
-    elsif number >= 6 and number <= 20
-        fileInfo.scale = 500 * (2 ** (20 - number))
-    end
+		# try to determine scale from numeric file name portion
+		match = fileInfo.baseName.rindex(/[^0-9]/)
+		if match and (fileInfo.baseName[match] == "-")
+			a = match + 1
+			l = fileInfo.baseName.length-1
+			number = fileInfo.baseName[a..l].to_i
+			if number >= 500 and number <= 10000000
+				fileNameScale = number
+			elsif number >= 6 and number <= 20
+				fileNameScale = 500 * (2 ** (20 - number))
+			end
+		end
+		
+		# use scale from numeric file name portion if none can be derived from the chart title
+		if fileInfo.scale == nil
+			fileInfo.scale = fileNameScale
+		else
+			# check consistency between the two scales if both are valid
+			if (fileNameScale != nil) && (fileNameScale != fileInfo.scale)
+				STDERR.print "  WARNING - \"#{fileInfo.baseName}\" chart scale derived from chart title\n"
+				STDERR.print "            (1:#{fileInfo.scale}) differs from what the chart name\n"
+				STDERR.print "            suggests (1:#{fileNameScale})\n"
+			end
+		end
+	end
 
     return fileInfo
 end
@@ -155,9 +205,9 @@ end
 
 def isSupportedFileExtension(fileExtension)
     case fileExtension.downcase
-        when "bmp", "gif", "jpg", "jpeg",
-             "pbm", "pgm", "png", "ppm",
-             "tga", "tif", "tiff", "map"
+        when ".bmp", ".gif", ".jpg", ".jpeg",
+             ".pbm", ".pgm", ".png", ".ppm",
+             ".tga", ".tif", ".tiff", ".map"
             return true
         else
             return false
@@ -174,8 +224,8 @@ def AddIfNoDupe(fileInfoSet, newFileInfo)
     # search through given set
     fileInfoSet.each { |fileInfo|
         if fileInfo.basePath == newFileInfo.basePath
-            STDERR.print "  ERROR - #{newFileInfo.baseName}.#{newFileInfo.extension} is a dupe of\n"
-            STDERR.print "          #{fileInfo.baseName}.#{fileInfo.extension}. Skipping!\n"
+            STDERR.print "  WARNING - #{newFileInfo.baseName}#{newFileInfo.extension} is a dupe of\n"
+            STDERR.print "            #{fileInfo.baseName}#{fileInfo.extension}. Skipping!\n"
             return
         end
     }
@@ -185,16 +235,102 @@ end
 
 
 ##########################################################################
+# Check if the given file name is accessible, either as an absolute path,
+# or relative to the given pathName. Play with upper or lower case if ori-
+# ginal case is not successful. Return the final path name if successful,
+# nil if not.
+##########################################################################
+
+def CheckFileAccessible(fileName, pathName, warnText)
+	returnValue = nil	# until proven otherwise
+    filePath = File.absolute_path(fileName, pathName)
+    if File.file? filePath
+        returnValue = filePath
+    end
+    filePath = File.absolute_path(fileName.upcase, pathName)
+    if File.file? filePath
+        returnValue = filePath
+    end
+    filePath = File.absolute_path(fileName.downcase, pathName)
+    if File.file? filePath
+        returnValue = filePath
+    end
+
+	if (returnValue != nil) and (warnText != nil)
+		STDERR.print "  Using #{warnText} from map file.\n"
+	end
+	
+    return returnValue
+end
+
+
+##########################################################################
+# Return valid (i.e. accessible) picture file name, or nil if no picture
+# file found
+##########################################################################
+
+def ValidatePicFileName(picFileNameFromMapFile, fileInfo)
+    warn = false
+    if fileInfo.extension != ".MAP"
+        # picture file name is given on command line
+        picFileExt = GetFileInfo(picFileNameFromMapFile, false).extension
+        if picFileExt != fileInfo.extension ||
+           picFileNameFromMapFile.index(fileInfo.baseName + ".") == nil
+            # picture file name given on command line differs significantly
+            # from map file contents
+            STDERR.print "\n  WARNING - Picture file name given on command line differs\n"
+            STDERR.print "            from the one contained in .map file.\n          "
+            warn = true
+        end
+        # try file name from command line first
+        fileName = fileInfo.basePath + fileInfo.extension
+        if File.file? fileName
+            if warn
+                STDERR.print "  Using picture file from command line.\n"
+            end
+            return fileName
+        end
+        fileName = fileInfo.basePath + fileInfo.extension.downcase
+        if File.file? fileName
+            if warn
+                STDERR.print "  Using picture file from command line.\n"
+            end
+            return fileName
+        end
+    end
+    # no picture file given on command line, or picture file from command line not found
+    # ==> try file name from map file, using its own path or path from command line
+    filePath = CheckFileAccessible(picFileNameFromMapFile, fileInfo.pathName,
+	                                                             "picture file path")
+	if filePath == nil		# not found, try path from command line
+	    picFileInfo = GetFileInfo(picFileNameFromMapFile, false)
+		picFileNameFromMapFile = picFileInfo.baseName + picFileInfo.extension.downcase
+		filePath = CheckFileAccessible(picFileNameFromMapFile, fileInfo.pathName,
+		                                                         "picture file name")
+	    if filePath == nil	# not found, retry with upper case extension
+			picFileNameFromMapFile = picFileInfo.baseName + picFileInfo.extension
+			filePath = CheckFileAccessible(picFileNameFromMapFile, fileInfo.pathName,
+		                                                         "picture file name")
+		end
+	end
+	return filePath
+end
+
+
+##########################################################################
 # Return valid (i.e. accessible) map file name, or nil if no map file
 # found
 ##########################################################################
 
-def ValidateMapFileName(fileNameBase)
-    mapFileName = fileNameBase + ".MAP"
+def ValidateMapFileName(fileName)
+    if File.file? fileName
+        return fileName
+    end
+    mapFileName = fileName + ".MAP"
     if File.file? mapFileName
         return mapFileName
     end
-    mapFileName = fileNameBase + ".map"
+    mapFileName = fileName + ".map"
     if File.file? mapFileName
         return mapFileName
     end
@@ -205,67 +341,6 @@ def ValidateMapFileName(fileNameBase)
     mapFileName = mapFileName.downcase
     if File.file? mapFileName
         return mapFileName
-    end
-    return nil
-end
-
-
-##########################################################################
-# Return valid (i.e. accessible) picture file name, or nil if no picture
-# file found
-##########################################################################
-
-def ValidatePicFileName(picFileNameMap, fileInfo)
-    warn = false
-    if fileInfo.extension != "MAP" and fileInfo.extension != ""
-        # picture file name is given on command line
-        picFileNameMapExt = GetFileInfo(picFileNameMap).extension
-        if picFileNameMapExt != fileInfo.extension ||
-           picFileNameMap.index(fileInfo.baseName) != 0
-            # picture file name given on command line differs significantly
-            # from map file contents
-            STDERR.print "\n  WARNING - Picture file name given on command line differs\n"
-            STDERR.print "            from the one contained in .map file.\n          "
-            warn = true
-        end
-        # try file name from command line first
-        fileName = fileInfo.basePath + "." + fileInfo.extension
-        if File.file? fileName
-            if warn
-                STDERR.print "  Using picture file from command line.\n"
-            end
-            return fileName
-        end
-        fileName = fileInfo.basePath + "." + fileInfo.extension.downcase
-        if File.file? fileName
-            if warn
-                STDERR.print "  Using picture file from command line.\n"
-            end
-            return fileName
-        end
-    end
-    # no picture file given on command line, or picture file from command line
-    # not found ==> try file name from map file, using path from command line
-    filePath = fileInfo.pathName + picFileNameMap
-    if File.file? filePath
-        if warn
-            STDERR.print "  Using picture file from map file.\n"
-        end
-        return filePath
-    end
-    filePath = fileInfo.pathName + picFileNameMap.upcase
-    if File.file? filePath
-        if warn
-            STDERR.print "  Using picture file from map file.\n"
-        end
-        return filePath
-    end
-    filePath = fileInfo.pathName + picFileNameMap.downcase
-    if File.file? filePath
-        if warn
-            STDERR.print "  Using picture file from map file.\n"
-        end
-        return filePath
     end
     return nil
 end
@@ -305,6 +380,50 @@ def LlSign(c)
 end
 
 
+##########################################################################
+# Read all text from the given .map file (it should be a small file) into
+# an array of lines. The second argument is used only for more compact
+# error messages. Return an array of read lines if successful, nil
+# otherwise.
+##########################################################################
+
+def ReadFileLines(mapFilePath, mapBaseName)
+    minMapLines = 12		# assume invalid .map file if less lines
+	maxBytes = 1024 * 1024	# expect no more than 1MB in a .map file
+	# try default line separator first
+    mapFileLines = File.readlines(mapFilePath, maxBytes)
+	if mapFileLines.length < minMapLines
+		# if that fails, try Mac-style separator
+        mapFileLines = File.readlines(mapFilePath, "\r")
+	end
+	if mapFileLines.length < minMapLines
+        STDERR.print "\n  ERROR - \"#{mapBaseName}\" has too few lines to be\n"
+        STDERR.print "          a valid Version 2 Ozi map file. Skipping!\n"
+        mapFileLines = nil	# return nil in case of error
+	end
+	return mapFileLines
+end
+
+
+##########################################################################
+# Skip all of the given text lines until one containing the given string
+# or regular expression is found. return teh found line number, or -1 if
+# nothing appropriate has been found.
+##########################################################################
+
+def SkipLines(mapBaseName, lines, lineNumber, regExpString)
+    while lines[lineNumber] !~ Regexp::new(regExpString)
+        lineNumber += 1
+		if lineNumber >= lines.length
+            STDERR.print "\n  ERROR - No \"#{regExpString}\" entry in \"#{mapBaseName}\".\n"
+            STDERR.print "          Skipping!\n"
+			return -1
+		end
+    end
+	return lineNumber
+end
+
+
 ######################### Execution starts here ##########################
 
 
@@ -313,8 +432,8 @@ end
 ##########################################################################
 
 puts "\nMap2Kap Version #{version}\n"
-puts "Visit http://www.cruisersforum.com/forums/f134/ to get the\n"
-puts "latest version, to report bugs, and to discuss enhancements.\n\n"
+puts "Visit http://www.cruisersforum.com/forums/showthread.php?t=47828&p=1227026\n"
+puts "to get the latest version, to report bugs, and to discuss enhancements.\n"
 
 # print out usage info if no command line parameters given
 unless ARGV[0]
@@ -324,17 +443,17 @@ end
 
 # get and process file names (command line parameters up to the first one
 # that is purely numeric, which, if present, is assumed to be the scale)
-STDERR.print "Collecting data...\n"
-numInFilePairs = 0
+STDERR.print "\nCollecting data...\n"
+numOfInFilePairs = 0
 fileInfo = []
 while ARGV[0] && ARGV[0].to_i.to_s != ARGV[0]
     argFileName = ARGV[0]
     ARGV.shift
-    numInFilePairs += 1
-    curFileInfo = GetFileInfo(argFileName)
+    numOfInFilePairs += 1
+    curFileInfo = GetFileInfo(argFileName, false)
 
     # pre-check file extension
-    errName = curFileInfo.baseName + "." + curFileInfo.extension
+    errName = curFileInfo.baseName + curFileInfo.extension
     unless isSupportedFileExtension(curFileInfo.extension)
         STDERR.print "  ERROR - File type extension of #{errName}\n"
         STDERR.print "          not supported. Skipping!\n"
@@ -348,7 +467,13 @@ while ARGV[0] && ARGV[0].to_i.to_s != ARGV[0]
         STDERR.print "          Skipping!\n"
         next
     end
-
+	
+	# update scale if necessary and possible
+	curScale = GetFileInfo(mapFileName, true).scale
+	if (curFileInfo.scale == nil) and (curScale != nil)
+		curFileInfo.scale = curScale
+	end
+	
     # survived all checks, add to list for processing
     AddIfNoDupe(fileInfo, curFileInfo)
 end
@@ -357,7 +482,7 @@ end
 if ARGV[0]
     chartScaleParam = ARGV[0]
     unless ChartScaleValid(chartScaleParam)
-        STDERR.print "        Aborting!\n"
+        STDERR.print "        Aborting!\n"	# detailed error message already given
         exit(false)
     end
 else
@@ -403,21 +528,24 @@ end
 # process all given files
 ##########################################################################
 
+STDERR.print "\n"
+
 unless fileInfo.size > 0
     STDERR.print "No files to process!\n"
     exit(false)
 end
 
-case numInFilePairs
+case numOfInFilePairs
     when 1
         STDERR.print "Processing file...\n"
     when fileInfo.size
         STDERR.print "Processing #{fileInfo.size} files...\n"
     else
-        STDERR.print "Processing #{fileInfo.size} out of #{numInFilePairs} given files...\n"
+        STDERR.print "Processing #{fileInfo.size} out of #{numOfInFilePairs} given files...\n"
 end
 
-numOutFiles = 0
+numOfOutFiles = 0
+numOfMissingIwh = 0
 
 fileInfo.each { |curFileInfo|
 
@@ -427,8 +555,10 @@ fileInfo.each { |curFileInfo|
     # get access to current map file
     ######################################################################
 
+	# used for file access
     mapFileName = ValidateMapFileName(curFileInfo.basePath)
-    mapBaseName = GetFileInfo(mapFileName).baseName
+	# used for more compact error messages
+    mapBaseName = GetFileInfo(mapFileName, false).baseName
 
 
     # get chart scale for current file
@@ -439,8 +569,8 @@ fileInfo.each { |curFileInfo|
     else
         chartScale = curFileInfo.scale
         unless chartScale      # with the new interactive entry, this should never happen
-            STDERR.print "\n  ERROR - Can't determine chart scale (not given on command line\n"
-            STDERR.print "          and no recognizable zoom level in file name). Skipping!\n"
+            STDERR.print "\n  ERROR - Can't determine chart scale (not given on command line,\n"
+            STDERR.print "          and not recognizable in file name or contents). Skipping!\n"
             next
         end
         unless chartScale > 0  # user entered scale = 0 to skip
@@ -449,19 +579,26 @@ fileInfo.each { |curFileInfo|
         end
     end
     STDERR.print " @ 1:#{chartScale}"
+	if (curFileInfo.scale != nil) && (curFileInfo.scale != chartScale)
+		STDERR.print "\n  WARNING - Chart scale given on command line is used but supersedes\n"
+		STDERR.print "            scale derived from .map file (1:#{curFileInfo.scale}).\n"
+	end
 
 
     # read & process map file
     ######################################################################
 
     # read map file into array of lines
-    mapFileLines = File.readlines(mapFileName)
+    mapFileLines = ReadFileLines(mapFileName, mapBaseName)
+	if mapFileLines == nil
+	    next        # error message already issued
+	end
     lineNumber   = 0
 
     # 1st line must be V2 Ozi file header
     unless mapFileLines[0] =~ /OziExplorer Map Data File Version 2\./
-        STDERR.print "\n  ERROR - \"#{mapBaseName}\" is not a valid\n"
-        STDERR.print "          Version 2 Ozi map file. Skipping!\n"
+        STDERR.print "\n  ERROR - \"#{mapBaseName}\" has no valid Version 2\n"
+        STDERR.print "          Ozi map file header. Skipping!\n"
         next
     end
 
@@ -510,9 +647,10 @@ fileInfo.each { |curFileInfo|
 
     # skip unneccessary lines
     # (typically containing "Reserved" and "Magnetic Variation" entries)
-    while mapFileLines[lineNumber] !~/Projection/
-        lineNumber += 1
-    end
+	lineNumber = SkipLines(mapBaseName, mapFileLines, lineNumber, "Projection")
+    if lineNumber < 0
+	    next        # error message already issued
+	end
 
     # read and process "Map Projection" entry
     projection = mapFileLines[lineNumber].split(",")[1].upcase 
@@ -529,9 +667,10 @@ fileInfo.each { |curFileInfo|
 
     # skip unneccessary lines
     # (typically there aren't any, but who knows...)
-    while mapFileLines[lineNumber] !~/Point/
-        lineNumber += 1
-    end
+	lineNumber = SkipLines(mapBaseName, mapFileLines, lineNumber, "Point")
+    if lineNumber < 0
+	    next        # error message already issued
+	end
 
     # read calibration points
     # (there could be as few as four or as many as 30 of them)
@@ -541,55 +680,58 @@ fileInfo.each { |curFileInfo|
         ref[lineNumber-start] = mapFileLines[lineNumber].split(",")
         lineNumber += 1
     end
-    numRef = lineNumber - start
+    numOfRefs = lineNumber - start
 
     # skip unneccessary lines
     # (typically containing "Projection Setup" up to "MMPNUM" entries,
     # and some abbreviation definitions in between these two)
-    while mapFileLines[lineNumber] !~ /MMPNUM/
-        lineNumber += 1
-    end
+	lineNumber = SkipLines(mapBaseName, mapFileLines, lineNumber, "MMPNUM")
+    if lineNumber < 0
+	    next        # error message already issued
+	end
 
     # read map boundary polygon/rectangle (PLYs) from MMPNUM, MMPXY, and MMPLL entries
-    numPly = mapFileLines[lineNumber].split(",")[1].to_i
+    numOfPlys = mapFileLines[lineNumber].split(",")[1].to_i
     lineNumber += 1
-    if numPly < 4
-        STDERR.print "\n  ERROR - Not enough MMP entries in \"#{mapBaseName}\".\n"
+    if numOfPlys < 4
+        STDERR.print "\n  ERROR - Not enough \"MMP\" entries in \"#{mapBaseName}\".\n"
         STDERR.print "          Skipping!\n"
         next
     end
-    if numPly > 4
+    if numOfPlys > 4
         STDERR.print "\n  WARNING - Non-quadrangular map boundary (more than 4 MMP entries)\n"
         STDERR.print "            found in \"#{mapBaseName}\".\n"
     end
-    plyxy = []
+    plyXY = []
     start = lineNumber
     while mapFileLines[lineNumber] =~/MMPXY/
-        plyxy[lineNumber-start]= mapFileLines[lineNumber].split(",")
+        plyXY[lineNumber-start]= mapFileLines[lineNumber].split(",")
         lineNumber += 1
     end
-    if lineNumber - start != numPly
-        STDERR.print "\n  ERROR - Wrong number of MMPXY entries in \"#{mapBaseName}\".\n"
+    if lineNumber - start != numOfPlys
+        STDERR.print "\n  ERROR - Wrong number of \"MMPXY\" entries in \"#{mapBaseName}\".\n"
         STDERR.print "          Skipping!\n"
         next
     end
-    plyll = []
+    plyLL = []
     start = lineNumber
     while mapFileLines[lineNumber] =~/MMPLL/
-        plyll[lineNumber-start]= mapFileLines[lineNumber].split(",")
+        plyLL[lineNumber-start]= mapFileLines[lineNumber].split(",")
         lineNumber += 1
     end
-    if lineNumber - start != numPly
-        STDERR.print "\n  ERROR - Wrong number of MMPLL entries in \"#{mapBaseName}\".\n"
+    if lineNumber - start != numOfPlys
+        STDERR.print "\n  ERROR - Wrong number of \"MMPLL\" entries in \"#{mapBaseName}\".\n"
         STDERR.print "          Skipping!\n"
         next
     end
 
     # skip unneccessary lines
     # (typically a single MOP entry)
-    while mapFileLines[lineNumber] !~/IWH/
-        lineNumber += 1
-    end
+	lineNumber = SkipLines(mapBaseName, mapFileLines, lineNumber, "IWH")
+    if lineNumber < 0
+	    numOfMissingIwh += 1 
+	    next        # error message already issued
+	end
 
     # read picture size in pixels from IWH entry
     iwh = mapFileLines[lineNumber].split(",")
@@ -597,7 +739,7 @@ fileInfo.each { |curFileInfo|
     picPixelWidth  = iwh[2].to_i
     picPixelHeight = iwh[3].to_i
     if picPixelWidth < 1 or picPixelHeight < 1
-        STDERR.print "\n  ERROR - No picture size (IWH entry) in \"#{mapBaseName}\".\n"
+        STDERR.print "\n  ERROR - Invalid \"IWH\" entry in \"#{mapBaseName}\".\n"
         STDERR.print "          Skipping!\n"
         next
     end
@@ -609,16 +751,16 @@ fileInfo.each { |curFileInfo|
     ######################################################################
 
     if projection == "MERCATOR"
-        projectionParam = (plyll[0][3].to_f + plyll[1][3].to_f +
-                           plyll[2][3].to_f + plyll[3][3].to_f )/4
+        projectionParam = (plyLL[0][3].to_f + plyLL[1][3].to_f +
+                           plyLL[2][3].to_f + plyLL[3][3].to_f )/4
     elsif projection == "TRANSVERSE MERCATOR" || projection == "POLYCONIC"
-        projectionParam = (plyll[0][2].to_f + plyll[1][2].to_f +
-                           plyll[2][2].to_f + plyll[3][2].to_f )/4
+        projectionParam = (plyLL[0][2].to_f + plyLL[1][2].to_f +
+                           plyLL[2][2].to_f + plyLL[3][2].to_f )/4
         STDERR.print "  WARNING - Transverse Mercator or Polyconic projection found\n"
         STDERR.print "            in \"#{mapBaseName}\".\n"
     elsif projection == "UTM"
-        projectionParam  = (plyll[0][2].to_f + plyll[1][2].to_f +
-                            plyll[2][2].to_f + plyll[3][2].to_f )/4
+        projectionParam  = (plyLL[0][2].to_f + plyLL[1][2].to_f +
+                            plyLL[2][2].to_f + plyLL[3][2].to_f )/4
         # try to use the central meridian in each UTM zone
         ppSign = 1
         if projectionParam < 0
@@ -655,17 +797,17 @@ fileInfo.each { |curFileInfo|
 
         # create REF entries from PLYs
         ofs = 1
-        for i in 0 .. (numPly - 1)
-            refX   = plyxy[i][2].strip
-            refY   = plyxy[i][3].strip
-            refLon = plyll[i][3].strip
-            refLat = plyll[i][2].strip
+        for i in 0 .. (numOfPlys - 1)
+            refX   = plyXY[i][2].strip
+            refY   = plyXY[i][3].strip
+            refLon = plyLL[i][3].strip
+            refLat = plyLL[i][2].strip
             h.puts "REF/#{i+ofs},#{refX},#{refY},#{refLon},#{refLat}"
         end
 
         # create further REF entries from Calibration Points
-        ofs += numPly
-        for i in 0 .. (numRef - 1)
+        ofs += numOfPlys
+        for i in 0 .. (numOfRefs - 1)
             refX   = ref[i][2].strip
             refY   = ref[i][3].strip
             # skip empty calibration points
@@ -684,8 +826,8 @@ fileInfo.each { |curFileInfo|
 
         # create PLY entries (not sure whether this is correct for more than 4 PLYs)
         ofs = 1
-        for i in 0 .. (numPly - 1)
-            h.puts "PLY/#{i+ofs},#{plyll[i][3].strip},#{plyll[i][2].strip}"
+        for i in 0 .. (numOfPlys - 1)
+            h.puts "PLY/#{i+ofs},#{plyLL[i][3].strip},#{plyLL[i][2].strip}"
         end
 
         # create DTM entry from latitude/longitude adjustments
@@ -711,7 +853,7 @@ fileInfo.each { |curFileInfo|
     kapFileName = curFileInfo.basePath + ".kap"
     if system("#{imgkap} #{opts} \"#{picFileName}\" \"#{hdrFileName}\" \"#{kapFileName}\"")
         STDERR.print "  -> \"#{curFileInfo.baseName}.kap\"\n"
-        numOutFiles += 1
+        numOfOutFiles += 1
     else
         STDERR.print "\n  ERROR - System call to imgkap.exe failed. Skipping!\n"
     end
@@ -730,23 +872,37 @@ fileInfo.each { |curFileInfo|
 # created KAP files
 ##########################################################################
 
-case numOutFiles
+if numOfMissingIwh > 0
+	STDERR.print "\n"
+	STDERR.print "One or more of your input .map files have their IWH entries missing. Since\n"
+	STDERR.print "Ozi Explorer doesn't strictly require these, these files may still be valid.\n"
+	STDERR.print "To fix them for map2kap, follow these steps for each affected file pair:\n"
+	STDERR.print "1. Open the image file in a graphics program to determine its pixel width\n"
+	STDERR.print "   and height\n"
+	STDERR.print "2. Append a line like the following to the .map file, replacing the place-\n"
+	STDERR.print "   holders with the real values determined in step 1:\n"
+	STDERR.print "     IWH,Map Image Width/Height,<pixel-width>,<pixel-height>\n"
+end
+
+puts ""
+
+case numOfOutFiles
     when 0
         puts "No files converted."
-    when numInFilePairs
-        case numInFilePairs
+    when numOfInFilePairs
+        case numOfInFilePairs
             when 1
                 puts "Given file successfully converted."
             when 2
                 puts "Both given files successfully converted."
             else
-                puts "All #{numOutFiles} given files successfully converted."
+                puts "All #{numOfOutFiles} given files successfully converted."
         end
-    else # less than numInFilePairs processed
-        puts "#{numOutFiles} out of #{numInFilePairs} given files successfully converted."
+    else # less than numOfInFilePairs processed
+        puts "#{numOfOutFiles} out of #{numOfInFilePairs} given files successfully converted."
 end
 
-case numOutFiles
+case numOfOutFiles
     when 0
         # no further output
     when 1
